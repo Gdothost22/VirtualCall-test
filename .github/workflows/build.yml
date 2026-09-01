@@ -20,16 +20,16 @@ jobs:
         unzip -q juce.zip
         mv JUCE-7.0.9 $HOME/JUCE
 
-    - name: Generate Xcode Project via Projucer
+    - - name: Generate Xcode Project via Projucer
       run: |
-        # Build Projucer command-line tool from source or use it
         cd $HOME/JUCE/extras/Projucer/Builds/MacOSX
         xcodebuild -configuration Release
         PROJUCER_BIN="$HOME/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
         
-        # Go back to repo root and save/resave the jucer project
         cd $GITHUB_WORKSPACE
-        $PROJUCER_BIN --resave *.jucer
+        JUCER_FILE=$(find . -name "*.jucer" -maxdepth 2)
+        echo "Found jucer file at: $JUCER_FILE"
+        $PROJUCER_BIN --resave "$JUCER_FILE"
 
     - name: Build via Xcode
       run: |
