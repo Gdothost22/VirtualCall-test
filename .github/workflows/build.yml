@@ -20,7 +20,7 @@ jobs:
         unzip -q juce.zip
         mv JUCE-7.0.9 $HOME/JUCE
 
-    - - name: Generate Xcode Project via Projucer
+    - name: Generate Xcode Project via Projucer
       run: |
         cd $HOME/JUCE/extras/Projucer/Builds/MacOSX
         xcodebuild -configuration Release
