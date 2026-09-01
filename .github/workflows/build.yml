@@ -1,0 +1,32 @@
+name: Build JUCE Plugin
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Download and Extract JUCE Framework
+      run: |
+        curl -L https://github.com/juce-framework/JUCE/archive/refs/tags/7.0.9.zip -o juce.zip
+        unzip -q juce.zip
+        mv JUCE-7.0.9 $HOME/JUCE
+
+    - name: Build via Xcode
+      run: |
+        cd Builds/MacOSX
+        xcodebuild -scheme "VirtualCall-test - Standalone Plugin" -configuration Release build
+        
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: VirtualCall-test-Binary
+        path: Builds/MacOSX/build/Release/
