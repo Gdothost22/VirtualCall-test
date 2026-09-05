@@ -16,6 +16,13 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Download and Extract JUCE Framework
+      run: |
+        mkdir -p ~/Downloads
+        curl -L https://github.com/juce-framework/JUCE/archive/refs/tags/7.0.9.zip -o juce.zip
+        unzip -q juce.zip
+        mv JUCE-7.0.9 ~/Downloads/JUCE
+
     - name: Build via Xcode
       run: |
         cd Builds/MacOSX
