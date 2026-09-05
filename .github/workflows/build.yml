@@ -23,9 +23,9 @@ jobs:
 
     - name: Generate Xcode Project via Projucer
       run: |
-        cd $HOME/JUCE/extras/Projucer/Builds/MacOSX
-        xcodebuild -configuration Release
-        PROJUCER_BIN="$HOME/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
+        cd $HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX
+        xcodebuild -project Projucer.xcodeproj -scheme Projucer -configuration Release build
+        PROJUCER_BIN="$HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
         
         cd $GITHUB_WORKSPACE
         JUCER_FILE=$(find . -name "*.jucer" -maxdepth 2)
