@@ -1,8 +1,10 @@
-name: Build JUCE Plugin
+name: Build Mac Plugin
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
   build-mac:
@@ -14,34 +16,11 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Download and Extract JUCE Framework
-      run: |
-        mkdir -p ~/Downloads
-        curl -L https://github.com/juce-framework/JUCE/archive/refs/tags/7.0.9.zip -o juce.zip
-        unzip -q juce.zip
-        mv JUCE-7.0.9 ~/Downloads/JUCE
-
-    - name: Verify JUCE Modules Path Exists
-      run: |
-        ls -la ~/Downloads/JUCE/modules
-
-    - name: Generate Xcode Project via Projucer
-      run: |
-        cd ~/Downloads/JUCE/extras/Projucer/Builds/MacOSX
-        xcodebuild -project Projucer.xcodeproj -scheme "Projucer - App" -configuration Release build
-    
-        PROJUCER_BIN="$HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
-
-        cd $GITHUB_WORKSPACE
-        JUCER_FILE=$(find . -name "*.jucer" -maxdepth 2)
-        echo "Found jucer file at: $Jucer_FILE"
-        $PROJUCER_BIN --resave "$JUCER_FILE"
-    
     - name: Build via Xcode
       run: |
         cd Builds/MacOSX
-        xcodebuild -scheme "VirtualCall-test - Standalone Plugin" -configuration Release build
-        
+        xcodebuild -scheme "VirtualCall-test - Standalone Plugin" -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO build
+
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
