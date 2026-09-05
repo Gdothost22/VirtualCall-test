@@ -21,6 +21,10 @@ jobs:
         unzip -q juce.zip
         mv JUCE-7.0.9 ~/Downloads/JUCE
 
+    - name: Verify JUCE Modules Path Exists
+      run: |
+        ls -la ~/Downloads/JUCE/modules
+
     - name: Generate Xcode Project via Projucer
       run: |
         cd $HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX
