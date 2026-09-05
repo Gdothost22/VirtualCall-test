@@ -27,21 +27,16 @@ jobs:
 
     - name: Generate Xcode Project via Projucer
       run: |
-        echo "--- 1. Checking if JUCE modules exist ---"
-        ls -la /Users/runner/Downloads/JUCE/modules
+        cd $HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX
+        xcodebuild -project Projucer.xcodeproj -scheme "Projucer - App" -configuration Release build
     
-        echo "--- 2. Locating Jucer file ---"
+        PROJUCER_BIN="$HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
+
         cd $GITHUB_WORKSPACE
         JUCER_FILE=$(find . -name "*.jucer" -maxdepth 2)
         echo "Found jucer file at: $JUCER_FILE"
-
-        echo "--- 3. Verifying Jucer file content ---"
-        grep "MODULEPATH" "$JUCER_FILE"
-
-        echo "--- 4. Running Projucer Resave ---"
-        PROJUCER_BIN="$HOME/Downloads/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer"
         $PROJUCER_BIN --resave "$JUCER_FILE"
-
+    
     - name: Build via Xcode
       run: |
         cd Builds/MacOSX
